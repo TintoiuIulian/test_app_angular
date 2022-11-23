@@ -1,4 +1,25 @@
 <p>users works!</p>
 
+<div class='table-responsive'>
+    <table class='table' *ngIf='users.length'>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor='let user of filteredUsers'>
 
+                <td>{{user.userId}}</td>
+                <td>{{user.userName}}</td>
+                <td>{{user.userEmail}}</td>
+                <td>{{user.userAddress}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <!-- <button (click)="ngOnInit()">Get all users</button> -->
+<!-- <div *ngFor='let user of filteredUsers | async'>{{user | json}}</div> -->

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { IUser } from './user';
 import { UsersService } from './users.service';
 
 @Component({
@@ -8,20 +10,24 @@ import { UsersService } from './users.service';
 })
 export class UsersComponent implements OnInit {
 
-  users: any = [];
-  filteredUsers = [];
+  users: IUser[] = [];
+  filteredUsers: IUser[] = [];
   errorMessage: string = '';
+  sub!: Subscription;
 
   constructor(private usersService: UsersService) { }
 
   ngOnInit(): void {
-    this.usersService.getUsers().subscribe({
+    this.sub = this.usersService.getUsers().subscribe({
       next: users => {
         this.users = users;
         this.filteredUsers = this.users;
       },
       error: err => this.errorMessage = err
     });
+  }
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
 }
