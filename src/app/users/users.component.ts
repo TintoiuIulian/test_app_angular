@@ -1,33 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable, Subscription, catchError, EMPTY } from 'rxjs';
+import { IPost } from '../posts/post';
 import { IUser } from './user';
 import { UsersService } from './users.service';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+  styleUrls: ['./users.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent  {
 
-  users: IUser[] = [];
-  filteredUsers: IUser[] = [];
+  constructor(private usersService: UsersService) {}
+
+  // filteredUsers: IUser[] = [];
   errorMessage: string = '';
-  sub!: Subscription;
 
-  constructor(private usersService: UsersService) { }
 
-  ngOnInit(): void {
-    this.sub = this.usersService.getUsers().subscribe({
-      next: users => {
-        this.users = users;
-        this.filteredUsers = this.users;
-      },
-      error: err => this.errorMessage = err
-    });
-  }
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
+  users$ = this.usersService.streamUsersAndPosts$.pipe(
+    catchError(err => {
+      this.errorMessage = err;
+      return EMPTY;
+    })
+  );
+
 
 }
