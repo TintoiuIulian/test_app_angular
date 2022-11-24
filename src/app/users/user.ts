@@ -1,4 +1,6 @@
-export interface IUser  {
+import { IPost } from "../posts/post";
+
+export interface IUser {
   id: number;
   name: string;
   username: string;
@@ -11,8 +13,10 @@ export interface IUser  {
     geo: {
       lat: string,
       lng: string
-    }
-}
+    },
+
+  },
+  posts: IPost[]
 }
 
 // export interface IAddress extends IGeo {

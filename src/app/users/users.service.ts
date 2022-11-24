@@ -10,7 +10,7 @@ import { IUser } from './user';
 export class UsersService {
   private usersUrl = 'https://jsonplaceholder.typicode.com';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   usersResponse$ = this.http.get<IUser[]>(this.usersUrl + '/users').pipe(
     tap((data) => console.log('All users', JSON.stringify(data))),
@@ -24,16 +24,17 @@ export class UsersService {
 
   streamUsersAndPosts$ = combineLatest([this.usersResponse$, this.postsResponse$]).pipe(
     map(([users, posts]) =>
-    users.map(
+
+      users.map(
         (user: IUser) =>
-          ({
-            ...user,
-            id: user.id,
-            name: user.name,
-            username:user.username,
-            email: user.email,
-            // searchKey: [user.id],
-          } as IUser)
+        ({
+          // ...user,
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          posts: posts.filter(post => user.id === post.userId),
+        } as IUser)
       )
     )
 
