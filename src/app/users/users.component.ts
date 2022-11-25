@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription, catchError, EMPTY } from 'rxjs';
-import { IPost } from '../posts/post';
-import { IUser } from './user';
+import { IServerPost } from '../posts/post';
+import { IServerUser } from './user';
 import { UsersService } from './users.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class UsersComponent  {
 
   constructor(private usersService: UsersService, private router: Router) {}
 
-  // filteredUsers: IUser[] = [];
+
   errorMessage: string = '';
 
 
@@ -26,12 +26,7 @@ export class UsersComponent  {
     })
   );
 
-  users12$ = this.usersService.streamUsersAndPosts$.pipe(
-    catchError(err => {
-      this.errorMessage = err;
-      return EMPTY;
-    })
-  );
+
 
   goToMoreInfo($myParam: string = ''): void {
     const navigationDetails: string[] = ['/posts'];
@@ -41,5 +36,37 @@ export class UsersComponent  {
     this.router.navigate(navigationDetails);
   }
 
+  filteredUsers: IServerUser[] = [];
+  users: IServerUser[] = [];
+  sub!: Subscription;
+
+
+  private _listFilter = '';
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.filteredUsers = this.performFilter(value);
+    console.log('setter', value);
+  }
+
+  performFilter(filterBy: string): IServerUser[] {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.users.filter((user: IServerUser) =>
+      user.name.toLocaleLowerCase().includes(filterBy)
+    );
+  }
+
+  ngOnInit(): void {
+    this.sub = this.usersService.getUsers().subscribe({
+      next: users => {
+        this.users = users;
+        this.filteredUsers = this.users;
+      },
+      error: err => this.errorMessage = err
+    });
+  }
 
 }

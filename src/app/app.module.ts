@@ -9,18 +9,22 @@ import { AuthGuard } from './core/auth.guard';
 
 import { CommentsComponent } from './comments/comments.component';
 import { PostsComponent } from './posts/posts.component';
+import { FormsModule } from '@angular/forms';
+import { PostsByUserComponent } from './posts-by-user/posts-by-user.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UsersComponent,
     CommentsComponent,
-    PostsComponent
+    PostsComponent,
+    PostsByUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule
 
   ],
   providers: [AuthGuard],

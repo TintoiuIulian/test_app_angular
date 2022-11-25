@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UsersService } from '../users/users.service';
-import { IPost } from '../posts/post';
+import { IServerPost } from '../posts/post';
 import { EMPTY, Observable, Subscription, catchError } from 'rxjs';
 
 @Component({
@@ -11,7 +11,7 @@ import { EMPTY, Observable, Subscription, catchError } from 'rxjs';
 })
 export class PostsComponent {
 
-  filteredPosts: IPost[] = [];
+  filteredPosts: IServerPost[] = [];
   errorMessage: string = '';
   filterTerm!: string;
 

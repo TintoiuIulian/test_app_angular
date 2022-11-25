@@ -1,8 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, combineLatest, map, Observable, tap, throwError } from 'rxjs';
-import { IPost } from '../posts/post';
-import { IUser } from './user';
+import {
+  catchError,
+  combineLatest,
+  map,
+  Observable,
+  tap,
+  throwError,
+} from 'rxjs';
+import { IServerPost } from '../posts/post';
+import {  IServerUser } from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -10,36 +17,62 @@ import { IUser } from './user';
 export class UsersService {
   private usersUrl = 'https://jsonplaceholder.typicode.com';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  usersResponse$ = this.http.get<IUser[]>(this.usersUrl + '/users').pipe(
+  getUsers(): Observable<IServerUser[]> {
+    return this.http.get<IServerUser[]>(this.usersUrl + '/users').pipe(
+      tap((data) => console.log('All users', JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  usersResponse$ = this.http.get<IServerUser[]>(this.usersUrl + '/users').pipe(
     tap((data) => console.log('All users', JSON.stringify(data))),
     catchError(this.handleError)
   );
 
-  postsResponse$ = this.http.get<IPost[]>(this.usersUrl + '/posts').pipe(
+  postsResponse$ = this.http.get<IServerPost[]>(this.usersUrl + '/posts').pipe(
     tap((data) => console.log('All posts', JSON.stringify(data))),
     catchError(this.handleError)
   );
 
-  streamUsersAndPosts$ = combineLatest([this.usersResponse$, this.postsResponse$]).pipe(
+  streamUsersAndPosts$ = combineLatest([
+    this.usersResponse$,
+    this.postsResponse$,
+  ]).pipe(
     map(([users, posts]) =>
-
-      users.map(
-        (user: IUser) =>
-        ({
-          // ...user,
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          email: user.email,
-          posts: posts.filter(post => user.id === post.userId),
-        } as IUser)
+     users.map(
+        (user: IServerUser) =>
+          ({
+            // ...user,
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            posts: posts.filter((post) => user.id === post.userId),
+          } as IServerUser)
       )
     )
-
   );
 
+  // {
+  //   let usersArray: any[] = [];
+  //   let user: any;
+  //   for(const item of users){
+  //       let post:IUser;
+  //       user.UserId = item.id;
+
+  //       for(const post of posts){
+  //         if(post.userId === item.id){
+  //           user.posts.push(post)
+  //         }
+  //       }
+
+  //       users.push(user);
+  //     }
+  //     return usersArray;
+
+  // }
 
   private handleError(err: HttpErrorResponse) {
     // in a real world app, we may send the server to some remote logging infrastructure

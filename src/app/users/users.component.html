@@ -1,64 +1,139 @@
+<div>
+  <!-- <div class="card">
+
+      <div class="card-body">
+          Welcome!
+      </div>
+  </div> -->
+
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">TestApp</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              [routerLink]="['/users']"
+              routerLinkActive="router-link-active"
+              >Users</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              [routerLink]="['/posts']"
+              routerLinkActive="router-link-active"
+              >Posts</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              [routerLink]="['/posts-by-user']"
+              routerLinkActive="router-link-active"
+              >Filtered Info</a
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Dropdown
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Disabled</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input
+            class="form-control me-2"
+            type="text"
+            placeholder="Search"
+            aria-label="Search"
+            [(ngModel)]="listFilter"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</div>
 <p>users works!</p>
 
-
 <div class="table-responsive">
-    <!-- UsersData local var   -->
-    <table class="table" *ngIf="users$ | async as UsersData">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of UsersData ">
-                <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.address.street }}</td>
-                <td><button type="button" class="btn btn-outline-info" (click)="goToMoreInfo()">More info</button></td>
-                <!-- <td *ngFor="let post of user.posts">
+  <!-- UsersData local var   -->
+  <table class="table" *ngIf="users$ | async as UsersData">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers">
+        <td>{{ user.id }}</td>
+        <td>
+          <a [routerLink]="['/posts-by-user', user.id]">{{ user.name }}</a>
+        </td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.address.street }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-outline-info"
+            (click)="goToMoreInfo()"
+          >
+            More info
+          </button>
+        </td>
+        <!-- <td *ngFor="let post of user.posts">
                     {{ post.title }}
                 </td> -->
+      </tr>
+    </tbody>
+  </table>
 
-            </tr>
-        </tbody>
-    </table>
+  <div style="margin: 30px"></div>
 
-    <div style="margin: 10px"></div>
-    <!-- 
-    <table class="table" *ngIf="users12$ | async as UsersData12">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Full Address</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of UsersData12">
-                <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td *ngFor="let post of user.posts">
-                    {{ post.title }}
-                </td>
-                <td>{{ user.address.street }}</td>
-            </tr>
-        </tbody>
-    </table> -->
 
+
+  <!-- <button (click)="ngOnInit()">Get all users</button> -->
+  <!-- <div *ngFor='let user of filteredUsers | async'>{{user | json}}</div> -->
 </div>
-
-
-<!-- <button (click)="ngOnInit()">Get all users</button> -->
-<!-- <div *ngFor='let user of filteredUsers | async'>{{user | json}}</div> -->
