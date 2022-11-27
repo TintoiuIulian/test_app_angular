@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription, catchError, EMPTY } from 'rxjs';
 import { IServerPost } from '../posts/post';
 import { IServerUser } from './user';
@@ -11,11 +11,16 @@ import { UsersService } from './users.service';
   styleUrls: ['./users.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersComponent  {
+export class UsersComponent {
 
-  constructor(private usersService: UsersService, private router: Router) {}
+  constructor(private usersService: UsersService, private router: Router, private route: ActivatedRoute) { }
 
 
+
+  filteredUsers: IServerUser[] = [];
+  users: IServerUser[] = [];
+  sub!: Subscription;
+  private _listFilter = '';
   errorMessage: string = '';
 
 
@@ -30,18 +35,12 @@ export class UsersComponent  {
 
   goToMoreInfo($myParam: string = ''): void {
     const navigationDetails: string[] = ['/posts'];
-    if($myParam.length) {
+    if ($myParam.length) {
       navigationDetails.push($myParam);
     }
     this.router.navigate(navigationDetails);
   }
 
-  filteredUsers: IServerUser[] = [];
-  users: IServerUser[] = [];
-  sub!: Subscription;
-
-
-  private _listFilter = '';
 
   get listFilter(): string {
     return this._listFilter;
@@ -68,5 +67,7 @@ export class UsersComponent  {
       error: err => this.errorMessage = err
     });
   }
-
+  toggleVisibility(event: any) {
+    event.target.classList.toggle('visible');
+}
 }

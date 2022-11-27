@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  BehaviorSubject,
   catchError,
   combineLatest,
   map,
@@ -9,7 +10,7 @@ import {
   throwError,
 } from 'rxjs';
 import { IServerPost } from '../posts/post';
-import {  IServerUser } from './user';
+import { IServerUser } from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ import {  IServerUser } from './user';
 export class UsersService {
   private usersUrl = 'https://jsonplaceholder.typicode.com';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getUsers(): Observable<IServerUser[]> {
     return this.http.get<IServerUser[]>(this.usersUrl + '/users').pipe(
@@ -25,6 +26,10 @@ export class UsersService {
       catchError(this.handleError)
     );
   }
+
+  getSingleUser(id: string) : Observable<any> {
+    return this.http.get('https://jsonplaceholder.typicode.com/'+id);
+  } 
 
   usersResponse$ = this.http.get<IServerUser[]>(this.usersUrl + '/users').pipe(
     tap((data) => console.log('All users', JSON.stringify(data))),
@@ -41,16 +46,16 @@ export class UsersService {
     this.postsResponse$,
   ]).pipe(
     map(([users, posts]) =>
-     users.map(
+      users.map(
         (user: IServerUser) =>
-          ({
-            // ...user,
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            posts: posts.filter((post) => user.id === post.userId),
-          } as IServerUser)
+        ({
+          // ...user,
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          posts: posts.filter((post) => user.id === post.userId),
+        } as IServerUser)
       )
     )
   );
@@ -89,4 +94,5 @@ export class UsersService {
     console.error(errorMessage);
     return throwError(() => errorMessage);
   }
+
 }

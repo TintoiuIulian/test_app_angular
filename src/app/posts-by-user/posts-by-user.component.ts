@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { catchError, EMPTY } from 'rxjs';
 import { UsersService } from '../users/users.service';
 
@@ -8,13 +9,31 @@ import { UsersService } from '../users/users.service';
   styleUrls: ['./posts-by-user.component.css'],
 })
 export class PostsByUserComponent {
-  constructor(private usersService: UsersService) {}
+
   errorMessage: string = '';
- 
+  id: string | undefined | null;
+  constructor(private usersService: UsersService, private readonly route: ActivatedRoute) { }
+
+
   usersFiltered$ = this.usersService.streamUsersAndPosts$.pipe(
     catchError((err) => {
       this.errorMessage = err;
       return EMPTY;
     })
   );
+
+  ngOnInit(): void {
+
+    this.route.paramMap.subscribe(
+      (params) => {
+        this.id = params.get("id");
+        if(this.id)
+        {
+          this.usersService.getSingleUser(this.id).subscribe(usersData => console.log(usersData));
+        }
+      }
+     
+    )
+
+  }
 }

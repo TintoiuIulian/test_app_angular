@@ -7,13 +7,13 @@ import { PostsComponent } from './posts/posts.component';
 import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'app' },
+  { path: '', pathMatch: 'full', redirectTo: 'users' },
   { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
   { path: 'users/:id', component: UsersComponent, canActivate: [AuthGuard] },
   { path: 'posts', component: PostsComponent, canActivate: [AuthGuard] },
   { path: 'posts/:id', component: PostsComponent, canActivate: [AuthGuard] },
   { path: 'posts-by-user', component: PostsByUserComponent, canActivate: [AuthGuard] },
-  { path: 'posts-by-user:/id', component: PostsByUserComponent, canActivate: [AuthGuard] },
+  { path: 'posts-by-user/:id', component: PostsByUserComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
